@@ -1,5 +1,5 @@
 
--- extensions  SCHEMA <%- migration.schemaName %>;
+-- extensions
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp"
 
