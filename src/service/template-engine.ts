@@ -10,8 +10,8 @@ import { render as renderTemplate } from 'ejs';
  * @param data Data to pass to the render engine
  */
 export const render = async <T>(template: string, data?: T): Promise<string> =>
-    await renderTemplate(
-        template,
-        data,
-        { async: true, }
-    );
+	await renderTemplate(
+		template,
+		data,
+		{ async: true, }
+	);
