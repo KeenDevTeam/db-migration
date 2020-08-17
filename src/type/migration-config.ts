@@ -1,8 +1,8 @@
 /**
- * Migration settings
+ * Migration config
  */
 
-export type MigrationSettings = {
+export type MigrationConfig = {
 
     /**
      * Name of the schema that contains migration table
