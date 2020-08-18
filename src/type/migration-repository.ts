@@ -9,5 +9,5 @@ export interface MigrationRepository {
     /**
      * Load all available migration scripts from the repository
      */
-	loadAll(): Promise<MigrationScript>;
+    loadAll(): Promise<Array<MigrationScript>>;
 }
