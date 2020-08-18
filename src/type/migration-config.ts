@@ -13,4 +13,9 @@ export type MigrationConfig = {
      * Name of the table that contains migrations information
      */
     tableName: string,
+
+    /**
+     * Save migration record in the migrations table
+     */
+    keepTrackOfMigration: boolean,
 }
