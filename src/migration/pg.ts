@@ -36,6 +36,13 @@ export class PostgresMigration implements Migration {
 	 */
 	private readonly spinner: ora.Ora;
 
+	/**
+	 * Default constructor
+	 * @param connectionPool Database connection pool
+	 * @param migrationConfig Migration configuration
+	 * @param migrationId Migration ID
+	 * @param migrationScript Migration script in any supported language
+	 */
 	constructor(
 		connectionPool: PostgresConnectionPool,
 
