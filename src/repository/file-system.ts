@@ -2,13 +2,15 @@
  * FileSystem repository
  */
 
-import { readdirSync, readFileSync, } from 'fs';
+import { readdirSync, readFileSync, writeFileSync, } from 'fs';
 import { join as joinPath, resolve as resolvePath, } from 'path';
 
 import { MissingArgumentError } from '@speedup/error';
+import { paramCase, } from 'change-case';
 
 import { MigrationRepository } from '../type/migration-repository';
 import { MigrationScript } from '../type/migration-script';
+import * as EmptyMigrationTemplate from '../util/empty-migration-template';
 
 export type FileSystemRepositoryConfig = {
 
@@ -64,5 +66,20 @@ export class FileSystemRepository implements MigrationRepository {
 					'utf-8'
 				)
 			}));
+	}
+
+	/**
+	 * Create a blank migration
+	 * @param humanFriendlyName A name for the migration (e.g. Add users table)
+	 */
+	async create(humanFriendlyName: string): Promise<void> {
+
+		const fileName = paramCase(humanFriendlyName);
+
+		writeFileSync(
+			fileName,
+			EmptyMigrationTemplate.render(humanFriendlyName),
+			'utf-8'
+		);
 	}
 }
