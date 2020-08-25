@@ -16,3 +16,8 @@ export const render: TemplateEngine = async <T>(template: string, data?: T): Pro
 		data,
 		{ async: true, }
 	);
+
+/**
+ * Build an EJS template engine
+ */
+export const build = (): TemplateEngine => render;
