@@ -3,7 +3,7 @@
  */
 
 import { render as renderTemplate } from 'ejs';
-import { TemplateEngine } from '../type/template-engine';
+import { TemplateEngine } from '../../type/template-engine';
 
 /**
  * Render an EJS template and return the rendered content
