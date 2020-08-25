@@ -1,5 +1,5 @@
 /**
- * Template engine
+ * Template engines
  */
 
 export * as EJS from './ejs';
