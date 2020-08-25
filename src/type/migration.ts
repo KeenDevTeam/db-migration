@@ -5,7 +5,7 @@
 export interface Migration {
 
     /**
-     * Apply the migration
+     * Apply current migration
      */
     apply(): Promise<void>;
 }
