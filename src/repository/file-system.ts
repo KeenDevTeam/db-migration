@@ -23,6 +23,9 @@ export type FileSystemRepositoryConfig = {
 	fileExtension?: string,
 };
 
+/**
+ * Local file system repository implementation
+ */
 export class FileSystemRepository implements MigrationRepository {
 
 	/**
@@ -51,7 +54,7 @@ export class FileSystemRepository implements MigrationRepository {
 	async loadAll(): Promise<Array<MigrationScript>> {
 
 		return readdirSync(this.config.migrationsDirectory, 'utf-8')
-			.filter(this.extensionValidator)
+			.filter(this.extensionValidator) // exclude all files with invalid extension
 			.map(fileName => ({
 				id: fileName,
 				script: readFileSync(
