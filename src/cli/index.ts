@@ -18,10 +18,6 @@ console.info();
 console.info(chalk.green(figlet.textSync('DB MIGRATION', 'Banner4')));
 console.info();
 
-type MigrationOptions = {
-	configFile: string
-};
-
 cli
 	.name('db-migrate')
 	.passCommandToAction(false);
@@ -29,19 +25,11 @@ cli
 cli
 	.command('add <name>')
 	.description('Add a new migration in the migration repository')
-	.requiredOption(
-		'-c, --config-file <config-file>',
-		'Configuration file path'
-	)
-	.action(async (name: string, options: MigrationOptions) => await migrationEngine.addMigration(name, options.configFile));
+	.action(async (name: string) => await migrationEngine.addMigration(name));
 
 cli
 	.command('start')
 	.description('Apply all the available migrations on the database.')
-	.requiredOption(
-		'-c, --config-file <config-file>',
-		'Configuration file path'
-	)
-	.action(async (options: MigrationOptions) => await migrationEngine.startMigration(options.configFile));
+	.action(async () => await migrationEngine.startMigration());
 
 cli.parse(process.argv);

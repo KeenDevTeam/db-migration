@@ -4,6 +4,8 @@
 
 import { MigrationScript } from './migration-script';
 
+export type MigrationRepositoryType = 'fs';
+
 export interface MigrationRepository {
 
     /**
