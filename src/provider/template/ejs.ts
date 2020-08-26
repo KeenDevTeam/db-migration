@@ -20,4 +20,4 @@ export const render: TemplateEngine = async <T>(template: string, data?: T): Pro
 /**
  * Build an EJS template engine
  */
-export const build = (): TemplateEngine => render;
+export const create = (): TemplateEngine => render;

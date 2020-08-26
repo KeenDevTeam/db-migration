@@ -86,8 +86,8 @@ export class FileSystemRepository implements MigrationRepository {
 }
 
 /**
- * Build a file system migration repository
+ * Create a file system migration repository
  * @param config File system migration repository configuration
  */
-export const build: MigrationRepository = (config: FileSystemRepositoryConfig) =>
+export const create: MigrationRepository = (config: FileSystemRepositoryConfig) =>
 	new FileSystemRepository(config);
