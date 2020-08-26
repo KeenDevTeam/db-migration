@@ -8,7 +8,7 @@ import { MissingArgumentError } from '@speedup/error';
 
 import { Logger } from '../../type/logger';
 import { Migration } from '../../type/migration';
-import { MigrationConfig } from '../../type/old/migration-config';
+import { MigrationConfig } from '../../type/migration-config';
 import { MigrationRepository } from '../../type/migration-repository';
 import { TemplateEngine } from '../../type/template-engine';
 
