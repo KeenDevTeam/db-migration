@@ -8,10 +8,9 @@ import { join as joinPath, resolve as resolvePath, } from 'path';
 import { MissingArgumentError } from '@speedup/error';
 import { paramCase, } from 'change-case';
 
-import { MigrationRepository } from '../type/migration-repository';
-import { MigrationScript } from '../type/migration-script';
-import * as EmptyMigrationTemplate from '../util/empty-migration-template';
 import { MigrationRepository } from '../../type/migration-repository';
+import { MigrationScript } from '../../type/migration-script';
+import * as EmptyMigrationTemplate from '../../util/empty-migration-template';
 
 export type FileSystemRepositoryConfig = {
 
@@ -89,5 +88,5 @@ export class FileSystemRepository implements MigrationRepository {
  * Create a file system migration repository
  * @param config File system migration repository configuration
  */
-export const create: MigrationRepository = (config: FileSystemRepositoryConfig) =>
+export const create = (config: FileSystemRepositoryConfig): MigrationRepository =>
 	new FileSystemRepository(config);
