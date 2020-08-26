@@ -11,6 +11,7 @@ import { paramCase, } from 'change-case';
 import { MigrationRepository } from '../type/migration-repository';
 import { MigrationScript } from '../type/migration-script';
 import * as EmptyMigrationTemplate from '../util/empty-migration-template';
+import { MigrationRepository } from '../../type/migration-repository';
 
 export type FileSystemRepositoryConfig = {
 
@@ -83,3 +84,10 @@ export class FileSystemRepository implements MigrationRepository {
 		);
 	}
 }
+
+/**
+ * Build a file system migration repository
+ * @param config File system migration repository configuration
+ */
+export const build: MigrationRepository = (config: FileSystemRepositoryConfig) =>
+	new FileSystemRepository(config);
