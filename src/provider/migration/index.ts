@@ -2,4 +2,4 @@
  * Migration
  */
 
-export * as Postgres from './pg';
+export * as postgres from './pg';

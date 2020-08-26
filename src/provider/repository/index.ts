@@ -2,4 +2,4 @@
  * Repositories
  */
 
-export * as FileSystem from './file-system';
+export * as fileSystem from './file-system';
