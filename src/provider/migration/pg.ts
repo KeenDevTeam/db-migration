@@ -56,9 +56,7 @@ export class PostgresMigration implements Migration {
 	 */
 	public async apply(): Promise<void> {
 
-		this.logger.loading('Connecting to the database...');
-		const client = await this.connectionPool.connect();
-		this.logger.success('Connected to the database.');
+		this.logger.info('Applying migrations...');
 
 		await Async.forEachSeries(
 
@@ -70,6 +68,12 @@ export class PostgresMigration implements Migration {
 
 				let migrationApplied = false;
 
+				this.logger.info(`Applying migration '${migration.id}...'`);
+
+				this.logger.loading('Connecting to the database...');
+				const client = await this.connectionPool.connect();
+				this.logger.success('Connected to the database.');
+
 				try {
 
 					this.logger.loading('Checking migration status...');
@@ -78,7 +82,7 @@ export class PostgresMigration implements Migration {
 					if (this.migrationConfig.keepTrackOfMigration) {
 
 						const result = await client.query(
-							`SELECT Count(id) FROM "${this.migrationConfig.schemaName}"."${this.migrationConfig.tableName}" WHERE migration_id=$1`,
+							`SELECT Count(record_id) FROM "${this.migrationConfig.schemaName}"."${this.migrationConfig.tableName}" WHERE identifier=$1`,
 							[migration.id]
 						);
 
@@ -138,18 +142,17 @@ export class PostgresMigration implements Migration {
 					throw err;
 				}
 				finally {
-
-					// release the connection
 					this.logger.loading('Releasing the connection...');
 					client.release();
-					this.logger.success('Connection is released.');
+					this.logger.success('Database connection is released.');
 				}
 			}
 		);
 
-		this.logger.loading('Disconnecting from database...');
-		client.release();
-		this.logger.success('Database connection is closed.');
+		// release the connection
+		this.logger.loading('Disconnecting from the database...');
+		await this.connectionPool.end();
+		this.logger.success('All the clients are disconnected.');
 	}
 }
 
