@@ -28,7 +28,7 @@ const getLogger = async (): Promise<Logger> => new loggerFactory.console.Console
 const getTemplateEngine = async (): Promise<TemplateEngine> => await templateEngineFactory.EJS.create();
 
 const getMigrationConfig = async (): Promise<MigrationConfig> => ({
-	schemaName: env('KD_DB_MIGRATION_SCHEMA_NAME').required().asString(),
+	schemaName: env('KD_DB_MIGRATION_SCHEMA_NAME').default('public').asString(),
 	tableName: env('KD_DB_MIGRATION_TABLE_NAME').required().asString(),
 	keepTrackOfMigration: env('KD_DB_MIGRATION_KEEP_MIGRATIONS_TRACK').default('true').asBool(),
 });
@@ -64,7 +64,7 @@ const getApplicationMigrationRepository = async (): Promise<MigrationRepository>
 				migrationsDirectory: resolvePath(
 					env('KD_DB_MIGRATION_REPO_CONFIG_DIRECTORY').required().asString(),
 				),
-				fileExtension: env('KD_DB_MIGRATION_REPO_CONFIG_DIRECTORY').default('.sql').asString(),
+				fileExtension: env('KD_DB_MIGRATION_REPO_CONFIG_FILE_EXTENSION').default('.sql').asString(),
 			});
 		}
 
