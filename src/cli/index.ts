@@ -25,8 +25,13 @@ cli
 	.passCommandToAction(false);
 
 cli
+	.command('add <name>')
+	.description('Add a new empty migration into the migration repository')
+	.action(async (name: string, filename: string) => await migrationEngine.addMigration(name, ''));
+
+cli
 	.command('add <name> <filename>')
-	.description('Add a new migration in the migration repository')
+	.description('Add a new migration from a file into the migration repository')
 	.action(async (name: string, filename: string) => await migrationEngine.addMigration(name, readFileSync(filename, 'utf-8').toString()));
 
 cli
