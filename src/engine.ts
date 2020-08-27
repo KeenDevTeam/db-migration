@@ -64,7 +64,7 @@ const getApplicationMigrationRepository = async (): Promise<MigrationRepository>
 				migrationsDirectory: resolvePath(
 					env('KD_DB_MIGRATION_REPO_CONFIG_DIRECTORY').required().asString(),
 				),
-				fileExtension: env('KD_DB_MIGRATION_REPO_CONFIG_FILE_EXTENSION').default('.sql').asString(),
+				fileExtension: env('KD_DB_MIGRATION_REPO_CONFIG_FILE_EXTENSION').asString(),
 			});
 		}
 
@@ -132,7 +132,10 @@ const getInitialMigrationProvider = async (): Promise<Migration> =>
 	await getMigrationProvider(
 		await getInitialMigrationRepository(),
 		await getTemplateEngine(),
-		await getMigrationConfig(),
+		{
+			...await getMigrationConfig(),
+			keepTrackOfMigration: false,
+		},
 		await getLogger(),
 	);
 
@@ -148,8 +151,13 @@ const getApplicationMigrationProvider = async (): Promise<Migration> =>
 
 export const addMigration = async (name: string, content: string,): Promise<void> => {
 
+	const logger = await getLogger();
+	logger.loading(`Creating migration '${name}'...`);
+
 	const migrationRepository = await getApplicationMigrationRepository();
 	await migrationRepository.create(name, content,);
+
+	logger.success('New migration is created.');
 };
 
 export const startMigration = async (): Promise<void> => {
