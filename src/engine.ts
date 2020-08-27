@@ -41,7 +41,8 @@ const getInitialMigrationRepository = async (): Promise<MigrationRepository> => 
 	return await migrationRepositoryFactory.fileSystem.create({
 		migrationsDirectory: resolvePath(
 			joinPath(
-				process.cwd(),
+				__dirname,
+				'..',
 				'resources',
 				'sql',
 				databaseSpecificScriptDir,
