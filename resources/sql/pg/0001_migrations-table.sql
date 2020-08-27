@@ -4,7 +4,7 @@ CREATE SCHEMA IF NOT EXISTS <%- migration.schemaName %>;
 
 -- extensions
 
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp" SCHEMA <%- migration.schemaName %>
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp" SCHEMA <%- migration.schemaName %>;
 
 -- migrations table
 
