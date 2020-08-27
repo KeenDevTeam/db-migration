@@ -4,6 +4,7 @@
 
 import { readdirSync, readFileSync, writeFileSync, } from 'fs';
 import { join as joinPath, resolve as resolvePath, } from 'path';
+import { EOL } from 'os';
 
 import { MissingArgumentError } from '@speedup/error';
 import { paramCase, } from 'change-case';
@@ -71,15 +72,19 @@ export class FileSystemRepository implements MigrationRepository {
 	/**
 	 * Create a blank migration
 	 * @param humanFriendlyName A name for the migration (e.g. Add users table)
+	 * @param content Migration script content
 	 */
-	async create(humanFriendlyName: string): Promise<void> {
+	async create(humanFriendlyName: string, content: string): Promise<void> {
 
 		const timestamp = new Date().valueOf();
 		const fileName = `${timestamp}_${paramCase(humanFriendlyName)}`;
 
 		writeFileSync(
 			fileName,
-			EmptyMigrationTemplate.render(humanFriendlyName),
+			[
+				EmptyMigrationTemplate.render(humanFriendlyName),
+				content,
+			].join(EOL),
 			'utf-8'
 		);
 	}

@@ -16,6 +16,7 @@ export interface MigrationRepository {
     /**
      * Create a blank migration
      * @param humanFriendlyName A name for the migration (e.g. Add users table)
+     * @param content Migration script content
      */
-    create(humanFriendlyName: string): Promise<void>;
+    create(humanFriendlyName: string, content: string): Promise<void>;
 }
