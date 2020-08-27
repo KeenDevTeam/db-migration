@@ -74,7 +74,8 @@ export class FileSystemRepository implements MigrationRepository {
 	 */
 	async create(humanFriendlyName: string): Promise<void> {
 
-		const fileName = paramCase(humanFriendlyName);
+		const timestamp = new Date().valueOf();
+		const fileName = `${timestamp}_${paramCase(humanFriendlyName)}`;
 
 		writeFileSync(
 			fileName,
