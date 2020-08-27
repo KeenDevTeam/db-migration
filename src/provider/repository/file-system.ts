@@ -2,7 +2,7 @@
  * FileSystem repository
  */
 
-import { readdirSync, readFileSync, writeFileSync, } from 'fs';
+import { readdirSync, readFileSync, writeFileSync, mkdirSync, } from 'fs';
 import { join as joinPath, resolve as resolvePath, } from 'path';
 import { EOL } from 'os';
 
@@ -12,6 +12,7 @@ import { paramCase, } from 'change-case';
 import { MigrationRepository } from '../../type/migration-repository';
 import { MigrationScript } from '../../type/migration-script';
 import * as EmptyMigrationTemplate from '../../util/empty-migration-template';
+import { strict } from 'assert';
 
 export type FileSystemRepositoryConfig = {
 
@@ -41,14 +42,16 @@ export class FileSystemRepository implements MigrationRepository {
 		if (!config) { throw new MissingArgumentError('config'); }
 
 		this.config = config;
+
+		mkdirSync(this.config.migrationsDirectory, { recursive: true, });
 	}
 
 	/**
 	 * Extension validator
 	 * @param fileName File name to validate
 	 */
-	private extensionValidator(fileName: string): boolean {
-		return this.config.fileExtension ? fileName.endsWith(this.config.fileExtension) : true;
+	private extensionValidator(fileName: string, validExtension?: string): boolean {
+		return validExtension ? fileName.endsWith(validExtension) : true;
 	}
 
 	/**
@@ -57,7 +60,8 @@ export class FileSystemRepository implements MigrationRepository {
 	async loadAll(): Promise<Array<MigrationScript>> {
 
 		return readdirSync(this.config.migrationsDirectory, 'utf-8')
-			.filter(this.extensionValidator) // exclude all files with invalid extension
+			.filter((fileName: string) => this.extensionValidator(fileName, this.config.fileExtension)
+			) // exclude all files with invalid extension
 			.map(fileName => ({
 				id: fileName,
 				script: readFileSync(
@@ -77,7 +81,10 @@ export class FileSystemRepository implements MigrationRepository {
 	async create(humanFriendlyName: string, content: string): Promise<void> {
 
 		const timestamp = new Date().valueOf();
-		const fileName = `${timestamp}_${paramCase(humanFriendlyName)}`;
+		const fileName = joinPath(
+			this.config.migrationsDirectory,
+			`${timestamp}_${paramCase(humanFriendlyName)}${this.config.fileExtension}`
+		);
 
 		writeFileSync(
 			fileName,
