@@ -2,6 +2,8 @@
  * Command-line interface (CLI)
  */
 
+import { readFileSync } from 'fs';
+
 import { program as cli } from 'commander';
 
 import * as figlet from 'figlet';
@@ -23,9 +25,9 @@ cli
 	.passCommandToAction(false);
 
 cli
-	.command('add <name>')
+	.command('add <name> <filename>')
 	.description('Add a new migration in the migration repository')
-	.action(async (name: string) => await migrationEngine.addMigration(name));
+	.action(async (name: string, filename: string) => await migrationEngine.addMigration(name, readFileSync(filename, 'utf-8').toString()));
 
 cli
 	.command('start')
