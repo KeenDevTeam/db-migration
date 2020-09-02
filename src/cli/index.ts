@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 /**
  * Command-line interface (CLI)
  */
