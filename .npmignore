@@ -1,0 +1,9 @@
+.nyc_output/
+coverage/
+src/
+test/
+.env
+.eslintrc.json
+.gitignore
+.npmignore
+tsconfig.json
