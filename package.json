@@ -1,10 +1,10 @@
 {
-  "name": "@keendev/db-migration-cli",
-  "version": "1.0.0",
-  "private": true,
-  "description": "Keep your database synchronized.",
+  "name": "@keendev/db-migration",
+  "version": "1.0.1",
+  "private": false,
+  "description": "Database migration tool",
   "bin": {
-    "pg-migrate": "dist/cli/index.js"
+    "db-migrate": "dist/cli/index.js"
   },
   "scripts": {
     "clean": "rimraf dist/",
@@ -17,13 +17,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com:keendev-team/db-migration-cli.git"
+    "url": "git+ssh://git@github.com:keendev-team/db-migration.git"
   },
   "author": "KeenDev Team",
   "bugs": {
-    "url": "https://github.com/keendev-team/db-migration-cli/issues"
+    "url": "https://github.com/keendev-team/db-migration/issues"
   },
-  "homepage": "https://github.com/keendev-team/db-migration-cli#readme",
+  "homepage": "https://github.com/keendev-team/db-migration#readme",
   "devDependencies": {
     "@types/async": "^3.2.3",
     "@types/chai": "^4.2.12",
