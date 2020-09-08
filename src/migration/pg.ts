@@ -2,15 +2,18 @@
  * Postgres migration provider
  */
 
+import { resolve as resolvePath, join as joinPath, } from 'path';
+
 import Async from 'async';
 import { Pool as PostgresConnectionPool, PoolConfig } from 'pg';
 import { MissingArgumentError } from '@speedup/error';
 
-import { Logger } from '../../type/logger';
-import { Migration } from '../../type/migration';
-import { MigrationConfig } from '../../type/migration-config';
-import { MigrationRepository } from '../../type/migration-repository';
-import { TemplateEngine } from '../../type/template-engine';
+import { Migration } from '../type/migration';
+import { MigrationConfig } from '../type/migration-config';
+import { MigrationRepository } from '../type/migration-repository';
+import { TemplateEngine } from '../type/template-engine';
+
+import { create as createFileSystemRepo } from '../repository/file-system';
 
 export class PostgresMigration implements Migration {
 
@@ -18,7 +21,6 @@ export class PostgresMigration implements Migration {
 	protected readonly templateEngine: TemplateEngine;
 	protected readonly migrationConfig: MigrationConfig;
 	protected readonly connectionPool: PostgresConnectionPool;
-	protected readonly logger: Logger;
 
 	constructor(
 
@@ -33,22 +35,68 @@ export class PostgresMigration implements Migration {
 
 		// Database connection settings
 		connectionPool?: PostgresConnectionPool,
-
-		// Logger
-		logger?: Logger,
 	) {
 
 		if (!migrationRepository) { throw new MissingArgumentError('migrationRepository'); }
 		if (!templateEngine) { throw new MissingArgumentError('templateEngine'); }
 		if (!migrationConfig) { throw new MissingArgumentError('migrationConfig'); }
 		if (!connectionPool) { throw new MissingArgumentError('connectionPool'); }
-		if (!logger) { throw new MissingArgumentError('logger'); }
 
 		this.migrationRepository = migrationRepository;
 		this.templateEngine = templateEngine;
 		this.migrationConfig = migrationConfig;
 		this.connectionPool = connectionPool;
-		this.logger = logger;
+	}
+
+	/**
+	 * Prepare database for migration
+	 */
+	private async prepareDatabase(): Promise<void> {
+
+		// Hint: Please note that these migrations are not logged in the migrations table
+
+		const initialMigrationRepo = await createFileSystemRepo({
+			migrationsDirectory: resolvePath(
+				joinPath(
+					__dirname,
+					'script',
+					'pg',
+				)
+			),
+			fileExtension: '.sql',
+		});
+
+		await Async.forEachSeries(
+			// load all initial migrations
+			await initialMigrationRepo.loadAll(),
+
+			// apply all the migration one by one
+			async (migration) => {
+
+				const client = await this.connectionPool.connect();
+
+				try {
+
+					const migrationScript = await this.templateEngine(
+						migration.script,
+						{
+							migration: { ...this.migrationConfig },
+						}
+					);
+
+					await client.query('BEGIN');
+					await client.query(migrationScript);
+					await client.query('COMMIT');
+				}
+				catch (err) {
+					await client.query('ROLLBACK');
+					throw err;
+				}
+				finally {
+					client.release();
+				}
+			}
+		);
 	}
 
 	/**
@@ -56,7 +104,8 @@ export class PostgresMigration implements Migration {
 	 */
 	public async apply(): Promise<void> {
 
-		this.logger.info('Applying migrations...');
+		// prepare database for migration
+		await this.prepareDatabase();
 
 		await Async.forEachSeries(
 
@@ -67,16 +116,9 @@ export class PostgresMigration implements Migration {
 			async (migration) => {
 
 				let migrationApplied = false;
-
-				this.logger.info(`Applying migration '${migration.id}...'`);
-
-				this.logger.loading('Connecting to the database...');
 				const client = await this.connectionPool.connect();
-				this.logger.success('Connected to the database.');
 
 				try {
-
-					this.logger.loading('Checking migration status...');
 
 					// migration tracking is requested?
 					if (this.migrationConfig.keepTrackOfMigration) {
@@ -87,17 +129,10 @@ export class PostgresMigration implements Migration {
 						);
 
 						migrationApplied = parseInt(result.rows[0].count) === 1;
-						this.logger.info(`Migration applied: ${migrationApplied ? 'Yes' : 'No'}`);
-					}
-					else {
-
-						this.logger.warning('Skip keeping track of migration.');
 					}
 
 					// make sure that the migration is not applied yet
 					if (!migrationApplied) {
-
-						this.logger.loading('Rendering the migration script...');
 
 						const migrationScript = await this.templateEngine(
 							migration.script,
@@ -106,16 +141,11 @@ export class PostgresMigration implements Migration {
 							}
 						);
 
-						this.logger.success('Migration script is rendered.');
-						this.logger.loading('Running migration script...');
-
 						await client.query('BEGIN');
 						await client.query(migrationScript);
 
 						// migration tracking is requested
 						if (this.migrationConfig.keepTrackOfMigration) {
-
-							this.logger.info('Keeping track of the migration...');
 
 							await client.query(
 								`INSERT INTO "${this.migrationConfig.schemaName}"."${this.migrationConfig.tableName}" (identifier) VALUES ($1)`,
@@ -123,36 +153,18 @@ export class PostgresMigration implements Migration {
 							);
 						}
 
-						this.logger.loading('Committing the changes...');
 						await client.query('COMMIT');
-						this.logger.success('Changes are committed.');
-					}
-					else {
-
-						this.logger.success('Skipped (Already applied).');
 					}
 				}
 				catch (err) {
-
-					this.logger.error(`Error in applying the migration. ${err.message}`);
-
-					this.logger.loading('Rolling back the transaction...');
 					await client.query('ROLLBACK');
-					this.logger.success('Transaction is rolled back.');
 					throw err;
 				}
 				finally {
-					this.logger.loading('Releasing the connection...');
 					client.release();
-					this.logger.success('Database connection is released.');
 				}
 			}
 		);
-
-		// release the connection
-		this.logger.loading('Disconnecting from the database...');
-		await this.connectionPool.end();
-		this.logger.success('All the clients are disconnected.');
 	}
 }
 
@@ -177,9 +189,6 @@ export const create = async (
 	// Database connection settings
 	connectionPoolConfig: PoolConfig,
 
-	// Logger
-	logger: Logger,
-
 ): Promise<Migration> => {
 
 	const connectionPool = new PostgresConnectionPool(connectionPoolConfig);
@@ -193,6 +202,5 @@ export const create = async (
 		templateEngine,
 		migrationConfig,
 		connectionPool,
-		logger,
 	);
 };

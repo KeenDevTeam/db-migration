@@ -9,10 +9,9 @@ import { EOL } from 'os';
 import { MissingArgumentError } from '@speedup/error';
 import { paramCase, } from 'change-case';
 
-import { MigrationRepository } from '../../type/migration-repository';
-import { MigrationScript } from '../../type/migration-script';
-import * as EmptyMigrationTemplate from '../../util/empty-migration-template';
-import { strict } from 'assert';
+import { MigrationRepository } from '../type/migration-repository';
+import { MigrationScript } from '../type/migration-script';
+import * as EmptyMigrationTemplate from '../util/empty-migration-template';
 
 export type FileSystemRepositoryConfig = {
 
