@@ -1,5 +1,5 @@
 /**
- * Repository / FileSystem
+ * Repository
  */
 
 import 'mocha';
