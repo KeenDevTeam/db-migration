@@ -10,7 +10,6 @@ import * as mdl from '../../src/repository';
 
 describe('[KeenDev][DB Migration][Repository]', () => {
 
-	// eslint-disable-next-line @typescript-eslint/no-empty-function
 	it('Testing module structure', () => {
 
 		expect(Object.keys(mdl)).to.have.lengthOf(1);
