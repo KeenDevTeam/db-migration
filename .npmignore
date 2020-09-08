@@ -1,7 +1,10 @@
 .nyc_output/
 coverage/
+node_modules/
+
 src/
 test/
+
 .env
 .eslintrc.json
 .gitignore

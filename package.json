@@ -3,6 +3,8 @@
   "version": "1.0.3",
   "private": false,
   "description": "Database migration tool",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "copy-resources:migration-script": "cp -R src/migration/script dist/migration/",
     "clean": "rimraf dist/",
