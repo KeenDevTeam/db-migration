@@ -85,7 +85,7 @@ describe('[KeenDev][DB Migration][Repository][file-system]', () => {
 
 				expect(scripts).to.be.an('array').that.has.lengthOf(20);
 
-				scripts.forEach((script, i) => {
+				scripts.forEach(script => {
 
 					expect(script).to.have.property('id').that.is.a('string');
 					expect(script).to.have.property('script').which.is.a('string');
