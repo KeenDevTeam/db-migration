@@ -1,5 +1,5 @@
 /**
- * Template / FileSystem
+ * Template
  */
 
 import 'mocha';
