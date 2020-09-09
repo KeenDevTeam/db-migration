@@ -6,9 +6,9 @@ import { MigrationRepository } from '../../src/type/migration-repository';
 import { MigrationScript } from '../../src/type/migration-script';
 
 export const create = (): MigrationRepository => ({
-    /**
-     * Load all available migration scripts from the repository
-     */
+	/**
+	 * Load all available migration scripts from the repository
+	 */
 	loadAll: async (): Promise<Array<MigrationScript>> => ([
 		{
 			id: 'mig-1',
@@ -24,18 +24,18 @@ export const create = (): MigrationRepository => ({
 		}
 	]),
 
-    /**
-     * Create a blank migration
-     * @param humanFriendlyName A name for the migration (e.g. Add users table)
-     * @param content Migration script content
-     */
-	create: async (humanFriendlyName: string, content: string): Promise<void> => { }
+	/**
+	 * Create a blank migration
+	 * @param humanFriendlyName A name for the migration (e.g. Add users table)
+	 * @param content Migration script content
+	 */
+	create: async (humanFriendlyName: string, content: string): Promise<void> => { } // eslint-disable-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
 });
 
 export const createWithInvalidSQLSyntaxAtFirstIndex = (): MigrationRepository => ({
-    /**
-     * Load all available migration scripts from the repository
-     */
+	/**
+	 * Load all available migration scripts from the repository
+	 */
 	loadAll: async (): Promise<Array<MigrationScript>> => ([
 		{
 			id: 'mig-1',
@@ -51,18 +51,18 @@ export const createWithInvalidSQLSyntaxAtFirstIndex = (): MigrationRepository =>
 		},
 	]),
 
-    /**
-     * Create a blank migration
-     * @param humanFriendlyName A name for the migration (e.g. Add users table)
-     * @param content Migration script content
-     */
-	create: async (humanFriendlyName: string, content: string): Promise<void> => { }
+	/**
+	 * Create a blank migration
+	 * @param humanFriendlyName A name for the migration (e.g. Add users table)
+	 * @param content Migration script content
+	 */
+	create: async (humanFriendlyName: string, content: string): Promise<void> => { } // eslint-disable-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
 });
 
 export const createWithInvalidSQLSyntaxAtLastIndex = (): MigrationRepository => ({
-    /**
-     * Load all available migration scripts from the repository
-     */
+	/**
+	 * Load all available migration scripts from the repository
+	 */
 	loadAll: async (): Promise<Array<MigrationScript>> => ([
 		{
 			id: 'mig-1',
@@ -78,11 +78,10 @@ export const createWithInvalidSQLSyntaxAtLastIndex = (): MigrationRepository => 
 		},
 	]),
 
-    /**
-     * Create a blank migration
-     * @param humanFriendlyName A name for the migration (e.g. Add users table)
-     * @param content Migration script content
-     */
-	create: async (humanFriendlyName: string, content: string): Promise<void> => { }
+	/**
+	 * Create a blank migration
+	 * @param humanFriendlyName A name for the migration (e.g. Add users table)
+	 * @param content Migration script content
+	 */
+	create: async (humanFriendlyName: string, content: string): Promise<void> => { } // eslint-disable-line @typescript-eslint/no-empty-function, @typescript-eslint/no-unused-vars
 });
-
