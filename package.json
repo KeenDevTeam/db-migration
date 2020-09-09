@@ -1,6 +1,6 @@
 {
   "name": "@keendev/db-migration",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "private": false,
   "description": "Database Migration library",
   "main": "dist/index.js",
