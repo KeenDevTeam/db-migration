@@ -16,6 +16,17 @@
     "lint": "eslint .",
     "prepublish": "run-s lint test coverage rebuild"
   },
+  "keywords": [
+    "keendev",
+    "keen-dev",
+    "database",
+    "db",
+    "migrate",
+    "migration",
+    "postgres",
+    "pg",
+    "sql"
+  ],
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com:keendev-team/db-migration.git"
