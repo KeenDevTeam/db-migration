@@ -148,11 +148,9 @@ describe('[KeenDev][DB Migration][Migration][Postgres]', () => {
 
 			it('should apply all the migrations', async () => {
 
-				const templateEngine = await TemplateEngine.create();
-
 				const instance = new mdl.PostgresMigration(
 					mockMigrationRepo.create(),
-					templateEngine,
+					TemplateEngine.create(),
 					migrationConfig,
 					connectionPool,
 				);
@@ -176,11 +174,9 @@ describe('[KeenDev][DB Migration][Migration][Postgres]', () => {
 
 			it('should apply no migration', async () => {
 
-				const templateEngine = await TemplateEngine.create();
-
 				const instance = new mdl.PostgresMigration(
 					mockMigrationRepo.createWithInvalidSQLSyntaxAtFirstIndex(),
-					templateEngine,
+					TemplateEngine.create(),
 					migrationConfig,
 					connectionPool,
 				);
@@ -201,11 +197,9 @@ describe('[KeenDev][DB Migration][Migration][Postgres]', () => {
 
 			it('should apply all the migrations except the last one', async () => {
 
-				const templateEngine = await TemplateEngine.create();
-
 				const instance = new mdl.PostgresMigration(
 					mockMigrationRepo.createWithInvalidSQLSyntaxAtLastIndex(),
-					templateEngine,
+					TemplateEngine.create(),
 					migrationConfig,
 					connectionPool,
 				);
