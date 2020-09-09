@@ -1,16 +1,17 @@
 {
   "name": "@keendev/db-migration",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "private": false,
-  "description": "Database migration tool",
-  "bin": {
-    "db-migrate": "dist/cli/index.js"
-  },
+  "description": "Database Migration library",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
+    "cp:migration-script": "cp -R src/migration/script dist/migration/",
     "clean": "rimraf dist/",
-    "build": "tsc",
+    "transpile": "tsc",
+    "build": "run-s transpile cp:migration-script",
     "rebuild": "run-s clean build",
-    "test": "mocha --require ts-node/register test/**/*.ts",
+    "test": "mocha --require ts-node/register test/*.spec.ts test/**/*.spec.ts",
     "coverage": "nyc npm run test",
     "lint": "eslint .",
     "prepublish": "run-s lint test coverage rebuild"
@@ -27,17 +28,18 @@
   "devDependencies": {
     "@types/async": "^3.2.3",
     "@types/chai": "^4.2.12",
-    "@types/clear": "^0.1.0",
+    "@types/chai-as-promised": "^7.1.3",
+    "@types/change-case": "^2.3.1",
     "@types/dotenv": "^8.2.0",
     "@types/ejs": "^3.0.4",
-    "@types/figlet": "^1.2.0",
     "@types/mocha": "^8.0.2",
-    "@types/ms": "^0.7.31",
     "@types/node": "^14.0.26",
     "@types/pg": "^7.14.4",
     "@typescript-eslint/eslint-plugin": "^3.9.0",
     "@typescript-eslint/parser": "^3.9.0",
     "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "dotenv": "^8.2.0",
     "eslint": "^7.7.0",
     "mocha": "^8.1.1",
     "npm-run-all": "^4.1.5",
@@ -49,15 +51,8 @@
   "dependencies": {
     "@speedup/error": "^1.0.7",
     "async": "^3.2.0",
-    "chalk": "^4.1.0",
     "change-case": "^4.1.1",
-    "clear": "^0.1.0",
-    "commander": "^6.0.0",
     "ejs": "^3.1.3",
-    "env-var": "^6.2.0",
-    "figlet": "^1.5.0",
-    "ms": "^2.1.2",
-    "ora": "^5.0.0",
     "pg": "^8.3.0"
   },
   "nyc": {
@@ -68,7 +63,7 @@
     "exclude": [
       "coverage/**/*",
       "dist/**/*",
-      "test/**/*",
+      "test/**/*.spec.ts",
       "**/*.d.ts"
     ],
     "reporter": [

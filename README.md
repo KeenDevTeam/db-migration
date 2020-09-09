@@ -1,46 +1,123 @@
-# Database migration CLI
+# KeenDev / Database migration
 
-Keep your Postgres database synchronized.
+Keep your database structure synchronized across different environments using native language on your database of choice.
+
+[![NPM version][npm-image]][npm-url]
+[![NPM downloads][downloads-image]][downloads-url]
 
 ## Installation
 
-### Environment variables
+```sh
 
-#### Migration config
+# NPM
+npm i @keendev/db-migration --save
 
-| Name | Required | Type | Default Value | Description |
-|:-----|:--------:|:----:|:--------------|:------------|
-| KD_DB_MIGRATION_SCHEMA_NAME | NO | String | 'public' | The schema that migration table is located/created in. |
-| KD_DB_MIGRATION_TABLE_NAME | Yes | String | null | Name of the table that contains migration information. |
-| KD_DB_MIGRATION_KEEP_MIGRATIONS_TRACK | NO | Boolean | true | Flag for determining keeping track of the migrations applied. |
+# Yarn
+yarn install @keendev/db-migration
 
-#### Database engine
+```
 
-| Name | Required | Type | Default Value | Description |
-|:-----|:--------:|:----:|:--------------|:------------|
-| KD_DB_MIGRATION_DB_ENGINE | Yes | String | null | Only 'pg'. |
+## Usage
 
-##### Postgres
+### Javascript
 
-| Name | Required | Type | Default Value | Description |
-|:-----|:--------:|:----:|:--------------|:------------|
-| KD_DB_PG_DATABASE_URI | Yes | String | null | URI that points to the target postgres database (e.g. postgres://user:pass@hostname:5432/db_name_here). |
-| KD_DB_PG_DATABASE_CONNECT_TIMEOUT | No | String | '10s' | The time to wait before raising timeout error while connecting to the database in MS compatible format. |
-| KD_DB_PG_DATABASE_QUERY_TIMEOUT | No | String | '5s' | The time to wait before raising timeout error while waiting for the query result in MS compatible format. |
-| KD_DB_PG_DATABASE_POOL_SIZE_MIN | No | Number | 10 | Minimum number of open connections. |
-| KD_DB_PG_DATABASE_POOL_SIZE_MAX | No | Number | 50 | Maximum number of open connections. |
-| KD_DB_PG_DATABASE_IDLE_IN_TRANSACTION_TIMEOUT | No | String | '10s' | The time to wait before raising timeout error while waiting for the transaction result in MS compatible format. |
-| KD_DB_PG_DATABASE_IDLE_TIMEOUT | No | String | '1m' | The time to wait before marking a connection as idle in MS compatible format. |
+```js
 
-#### Migration repository
+const { resolve as resolvePath, join as joinPath } = require('fs');
+const dbMigration = require('@keendev/db-migration');
 
-| Name | Required | Type | Default Value | Description |
-|:-----|:--------:|:----:|:--------------|:------------|
-| KD_DB_MIGRATION_REPO_PROVIDER | Yes | String | null | Only 'fs'. |
+// Postgres
 
-##### File system
+// 1) Prepare a repository
+const repository = dbMigration.repository.fileSystem.create({
+    migrationsDirectory: resolvePath(joinPath(__dirname, 'migrations')),
+    fileExtension: '.sql',
+});
 
-| Name | Required | Type | Default Value | Description |
-|:-----|:--------:|:----:|:--------------|:------------|
-| KD_DB_MIGRATION_REPO_CONFIG_DIRECTORY | Yes | String | null | Path to the folder that contains migration scripts. |
-| KD_DB_MIGRATION_REPO_CONFIG_FILE_EXTENSION | Yes | String | null | Extension to be considered as migration script (e.g. .sql). |
+// 2) Create the template engine of your choice
+const templateEngine = dbMigration.template.create();
+
+// 3) Prepare migration configuration
+const migrationConfig = {
+    schemaName: 'migration',
+    tableName: 'history',
+    keepTrackOfMigration: true,
+};
+
+// 4) Prepare the database connection
+const connectionPool = {
+    connectionString: process.env.DATABASE_CONNECTION_URI,
+};
+
+// 5) Instantiate the database driver of your choice
+const migrationEngine = dbMigration.migration.postgres.create(
+    repository,
+    templateEngine,
+    migrationConfig,
+    connectionPoolConfig,
+);
+
+// 6) Synchronize your database
+migrationEngine
+    .apply()
+    .then(() => console.info('Database is migrated to the latest version'))
+    .catch(err => console.error('Failed to migrate the database', err));
+
+```
+
+### TypeScript
+
+```ts
+
+import { resolve as resolvePath, join as joinPath } from 'fs';
+import * as dbMigration from '@keendev/db-migration';
+
+// Postgres
+
+// 1) Prepare a repository
+const repository = dbMigration.repository.fileSystem.create({
+    migrationsDirectory: resolvePath(joinPath(__dirname, 'migrations')),
+    fileExtension: '.sql',
+});
+
+// 2) Create the template engine of your choice
+const templateEngine = dbMigration.template.create();
+
+// 3) Prepare migration configuration
+const migrationConfig: MigrationConfig = {
+    schemaName: 'migration',
+    tableName: 'history',
+    keepTrackOfMigration: true,
+};
+
+// 4) Prepare the database connection
+const connectionPool: Pool = {
+    connectionString: process.env.DATABASE_CONNECTION_URI,
+};
+
+// 5) Instantiate the database driver of your choice
+const migrationEngine = dbMigration.migration.postgres.create(
+    repository,
+    templateEngine,
+    migrationConfig,
+    connectionPoolConfig,
+);
+
+// 6) Synchronize your database
+migrationEngine
+    .apply()
+    .then(() => console.info('Database is migrated to the latest version'))
+    .catch(err => console.error('Failed to migrate the database', err));
+
+```
+
+And you're good to go!
+
+## License
+
+MIT
+
+[npm-image]: https://img.shields.io/npm/v/@keendev/db-migration.svg?color=orange
+[npm-url]: https://npmjs.org/package/@keendev/db-migration
+[downloads-image]: https://img.shields.io/npm/dt/@keendev/db-migration.svg
+[downloads-url]: https://npmjs.org/package/@keendev/db-migration

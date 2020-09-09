@@ -3,7 +3,7 @@
  */
 
 import { render as renderTemplate } from 'ejs';
-import { TemplateEngine } from '../../type/template-engine';
+import { TemplateEngine } from '../type/template-engine';
 
 /**
  * Render an EJS template and return the rendered content
@@ -20,4 +20,4 @@ export const render: TemplateEngine = async <T>(template: string, data?: T): Pro
 /**
  * Build an EJS template engine
  */
-export const create = async (): Promise<TemplateEngine> => render;
+export const create = (): TemplateEngine => render;
