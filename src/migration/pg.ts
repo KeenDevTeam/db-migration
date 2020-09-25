@@ -102,7 +102,7 @@ export class PostgresMigration implements Migration {
 	/**
 	 * Apply migrations on the specified PostgreSQL database
 	 */
-	public async apply(templateEngineData?: any): Promise<void> {
+	public async apply(templateEngineData?: any): Promise<void> { // eslint-disable-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
 
 		// prepare database for migration
 		await this.prepareDatabase();
