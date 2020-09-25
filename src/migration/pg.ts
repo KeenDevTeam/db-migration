@@ -102,7 +102,7 @@ export class PostgresMigration implements Migration {
 	/**
 	 * Apply migrations on the specified PostgreSQL database
 	 */
-	public async apply(): Promise<void> {
+	public async apply(templateEngineData?: any): Promise<void> {
 
 		// prepare database for migration
 		await this.prepareDatabase();
@@ -134,9 +134,16 @@ export class PostgresMigration implements Migration {
 					// make sure that the migration is not applied yet
 					if (!migrationApplied) {
 
+						// make sure that template engine data is not null or undefined before destructing it
+						const safeTemplateEngineData = templateEngineData ? templateEngineData : {};
+
 						const migrationScript = await this.templateEngine(
 							migration.script,
 							{
+								// do not change user options order
+								...safeTemplateEngineData,
+
+								// keys listed below are fixed and cannot be changed
 								migration: { ...this.migrationConfig },
 							}
 						);
