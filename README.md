@@ -113,10 +113,6 @@ migrationEngine
 
 And you're good to go!
 
-## License
-
-MIT
-
 [npm-image]: https://img.shields.io/npm/v/@keendev/db-migration.svg?color=orange
 [npm-url]: https://npmjs.org/package/@keendev/db-migration
 [downloads-image]: https://img.shields.io/npm/dt/@keendev/db-migration.svg
